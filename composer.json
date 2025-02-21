@@ -1,0 +1,39 @@
+{
+    "name": "{{namespace|lower,slug,reverse}}",
+    "description": "{{description}}",
+    "type": "{{type}}",
+    "license": "{{license}}",
+    "authors": [
+        {
+            "name": "{{author}}",
+            "email": "{{author_name}}",
+            "homepage": "{{author_homepage}}"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "pestphp/pest": "^v3.7.4",
+        "laravel/pint": "^v1.21.0",
+        "phpstan/phpstan": "^2.1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "{{namespace}}": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "{{namespace|escape}}\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "@php vendor/bin/pest",
+        "lint": "@php vendor/bin/phpstan --analyse",
+        "style": "@php vendor/bin/pint",
+        "style:test": "@style --test"
+    },
+    "minimum-stability": "{{minimum-stability}}",
+    "prefer-stable": true
+}
