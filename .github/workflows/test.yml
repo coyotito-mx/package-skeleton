@@ -1,0 +1,55 @@
+name: Run Test
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    # <DELETE>
+    env:
+      INIT_PACKAGE: ${{ vars.INIT_PACKAGE }}
+    # </DELETE>
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.1, 8.2, 8.3, 8.4]
+        os: [ubuntu-latest, macos-latest, window-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          extensions: mbstring, intl, zip, bcmath, ctype, dom, fileinfo, iconv, json, pdo, tokenizer, xml, curl
+          tools: composer
+
+      # <DELETE>
+      - name: Set package information
+        run: |
+          echo "PACKAGE_NAME=${{ secrets.PACKAGE_NAME }}" >> $GITHUB_ENV
+          echo "PACKAGE_VENDOR=${{ secrets.PACKAGE_VENDOR }}" >> $GITHUB_ENV
+          echo "PACKAGE_DESCRIPTION=${{ secrets.PACKAGE_DESCRIPTION }}" >> $GITHUB_ENV
+        if: env.INIT_PACKAGE != ''
+
+      - name: Init Package
+        run: |
+          ./skeleton package:init ${{ env.PACKAGE_VENDOR }} ${{ env.PACKAGE_NAME }} ${{ env.PACKAGE_DESCRIPTION }}
+        if: env.INIT_PACKAGE != ''
+      # </DELETE>
+
+      - name: Install dependencies
+        run: |
+          composer install --no-progress --prefer-dist --no-progress
+
+      - name: Install fixed PHP version
+        run: |
+          composer require --no-progress --prefer-dist --fixed "php:${{ matrix.php }}"
+
+      - name: Run tests
+        run: |
+          composer run test

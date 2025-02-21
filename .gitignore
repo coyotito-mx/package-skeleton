@@ -1,0 +1,10 @@
+/vendor
+/.idea
+/.vscode
+/*.log
+/cache
+/tmp
+/var
+/.env
+/.phpunit.result.cache
+/composer.lock
