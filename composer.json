@@ -18,7 +18,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "{{namespace|escape}}\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
