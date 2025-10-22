@@ -8,7 +8,7 @@ Thank you for considering contributing to {{package|title}}! We welcome contribu
 
 2. **Clone the Repository**: Clone your forked repository to your local machine.
     ```bash
-    git clone https://github.com/{{namespace|lower,slug,reverse}}.git
+    git clone https://github.com/{{namespace|slug,reverse}}.git
     ```
 
 3. **Create a Branch**: Create a new branch for your feature or bugfix.

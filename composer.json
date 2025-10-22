@@ -1,5 +1,5 @@
 {
-    "name": "{{namespace|lower,reverse}}",
+    "name": "{{namespace|slug,reverse}}",
     "description": "{{description}}",
     "type": "{{type}}",
     "license": "{{license}}",
