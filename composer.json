@@ -1,5 +1,5 @@
 {
-    "name": "{{namespace|lower,slug,reverse}}",
+    "name": "{{namespace|lower,reverse}}",
     "description": "{{description}}",
     "type": "{{type}}",
     "license": "{{license}}",
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "{{namespace}}": "src/"
+            "{{namespace|escape}}\\": "src/"
         }
     },
     "autoload-dev": {
