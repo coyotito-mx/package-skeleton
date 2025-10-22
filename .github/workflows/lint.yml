@@ -1,60 +1,41 @@
-name: Run Lint
+name: Ensure code quality
 
 on:
-  push:
+  pull_request:
+    branches: [dev]
 
 jobs:
-  lint:
-    runs-on: ${{ matrix.os }}
-
-    # <DELETE>
-    env:
-      INIT_PACKAGE: ${{ vars.INIT_PACKAGE }}
-    # </DELETE>
-
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.1, 8.2, 8.3, 8.4]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+  tests:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, zip, bcmath, ctype, dom, fileinfo, iconv, json, pdo, tokenizer, xml, curl
+          php-version: 8.4
           tools: composer
 
-      # <DELETE>
-      - name: Set package information
-        run: |
-          echo "PACKAGE_NAME=${{ secrets.PACKAGE_NAME }}" >> $GITHUB_ENV
-          echo "PACKAGE_VENDOR=${{ secrets.PACKAGE_VENDOR }}" >> $GITHUB_ENV
-          echo "PACKAGE_DESCRIPTION=${{ secrets.PACKAGE_DESCRIPTION }}" >> $GITHUB_ENV
-        if: env.INIT_PACKAGE != ''
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Init Package
-        run: |
-          ./skeleton package:init ${{ env.PACKAGE_VENDOR }} ${{ env.PACKAGE_NAME }} ${{ env.PACKAGE_DESCRIPTION }}
-        if: env.INIT_PACKAGE != ''
-      # </DELETE>
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         run: |
-          composer install --no-progress --prefer-dist --no-progress
+          composer install \
+            --prefer-dist \
+            --no-progress \
+            --no-interaction \
+            --optimize-autoloader
 
-      - name: Install fixed PHP version
-        run: |
-          composer require --no-progress --prefer-dist --fixed "php:${{ matrix.php }}"
+      - name: Run code quality testing
+        run: composer lint:with-style
 
-      - name: Run Pint
-        run: |
-          composer run style:test
-
-      - name: Run PHPStan
-        run: |
-          composer run lint
