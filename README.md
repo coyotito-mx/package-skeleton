@@ -9,7 +9,7 @@
 You can install the package via Composer:
 
 ```bash
-composer require {{namespace|lower,slug,reverse}}
+composer require {{namespace|slug,reverse}}
 ```
 
 ## Usage

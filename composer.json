@@ -1,38 +1,43 @@
 {
-    "name": "{{namespace|lower,slug,reverse}}",
+    "name": "{{namespace|slug,reverse}}",
     "description": "{{description}}",
     "type": "{{type}}",
     "license": "{{license}}",
-    "authors": [
-        {
-            "name": "{{author}}",
-            "email": "{{author_name}}",
-            "homepage": "{{author_homepage}}"
-        }
-    ],
     "require": {
         "php": "^8.1"
     },
     "require-dev": {
-        "pestphp/pest": "^v3.7.4",
-        "laravel/pint": "^v1.21.0",
-        "phpstan/phpstan": "^2.1.6"
+        "pestphp/pest": "v4.1.2",
+        "laravel/pint": "^v1.25.1",
+        "phpstan/phpstan": "^2.1.31"
     },
     "autoload": {
         "psr-4": {
-            "{{namespace}}": "src/"
+            "{{namespace|escape}}\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "{{namespace|escape}}\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
         "test": "@php vendor/bin/pest",
-        "lint": "@php vendor/bin/phpstan --analyse",
+        "test:ci": "@php vendor/bin/pest --ci",
+        "lint": "@php vendor/bin/phpstan --analyse --memory-limit=1G",
         "style": "@php vendor/bin/pint",
-        "style:test": "@style --test"
+        "style:test": "@style --test",
+        "lint:with-style": [
+            "@lint",
+            "@style:test"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "{{minimum-stability}}",
     "prefer-stable": true
