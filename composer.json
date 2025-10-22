@@ -3,13 +3,6 @@
     "description": "{{description}}",
     "type": "{{type}}",
     "license": "{{license}}",
-    "authors": [
-        {
-            "name": "{{author}}",
-            "email": "{{author_name}}",
-            "homepage": "{{author_homepage}}"
-        }
-    ],
     "require": {
         "php": "^8.1"
     },
