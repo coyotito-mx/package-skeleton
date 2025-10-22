@@ -32,6 +32,13 @@
             "@style:test"
         ]
     },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
     "minimum-stability": "{{minimum-stability}}",
     "prefer-stable": true
 }
