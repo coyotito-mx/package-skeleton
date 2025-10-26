@@ -3,7 +3,7 @@ name: Update CLI Binary
 on:
   workflow_dispatch:
     inputs:
-      download-url:
+      download_url:
         description: The CLI download URL
         type: string
         required: true
@@ -34,7 +34,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const downloadUrl = ${{ toJson(inputs.download-url) }};
+            const downloadUrl = ${{ toJson(inputs.download_url) }};
 
             core.debug(downloadUrl);
 
@@ -87,7 +87,7 @@ jobs:
         shell: bash
         run: |
           # Download CLI
-          curl -sL -o asset.tar.gz "${{ inputs.download-url }}"
+          curl -sL -o asset.tar.gz "${{ inputs.download_url }}"
 
           # Rename old CLI
           mv ./skeleton ./skeleton-old
