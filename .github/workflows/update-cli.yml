@@ -93,18 +93,21 @@ jobs:
           # Download CLI
           curl -sL -o asset.tar.gz "${{ inputs.download_url }}"
 
-          # Rename old CLI
+          # Rename old CLI if it exists
           mv ./skeleton ./skeleton-old
 
           # Extract file
           tar -xf asset.tar.gz
 
+          # Ensure new binary is executable (best-effort)
+          chmod +x ./skeleton || true
+
       - name: Get CLI versions
         id: cli-versions
         shell: bash
         run: |
-          old_version="$(./skeleton-old -V)"
-          new_version="$(./skeleton -V)"
+          old_version="$( ./skeleton-old -V )"
+          new_version="$( ./skeleton -V )"
 
           echo "old-version=$old_version" >> $GITHUB_OUTPUT
           echo "new-version=$new_version" >> $GITHUB_OUTPUT
@@ -116,9 +119,9 @@ jobs:
           branch: 'chore/update-cli'
           sign-commits: true
           commit-message: |
-            The CLI got updated
+            Update CLI binary
 
-            `[${` steps.cli-versions.outputs.old-version }}]` to `[${{ steps.cli-versions.outputs.new-version }}]`
+            From `${{ steps.cli-versions.outputs.old-version }}` to `${{ steps.cli-versions.outputs.new-version }}`
 
 
 
