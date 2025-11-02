@@ -113,6 +113,9 @@ jobs:
         run: |
           old_version="$( ./skeleton-old -V )"
           new_version="$( ./skeleton -V )"
+          
+          # Remove "old" CLI
+          rm -f ./skeleton-old
 
           echo "old-version=$old_version" >> $GITHUB_OUTPUT
           echo "new-version=$new_version" >> $GITHUB_OUTPUT
