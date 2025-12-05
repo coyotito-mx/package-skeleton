@@ -23,12 +23,12 @@ jobs:
     steps:
       - name: Minimal origin guard (owner + sender)
         if: ${{
-              github.repository_owner != 'coyotito-mx' ||
-              (
-                github.event.sender.login != 'asciito' &&
-                github.event.sender.login != 'github-actions[bot]'
-              )
-            }}
+          github.repository_owner != 'coyotito-mx' ||
+          (
+          github.event.sender.login != 'asciito' &&
+          github.event.sender.login != 'github-actions[bot]'
+          )
+          }}
         uses: actions/github-script@v8
         with:
           script: |
@@ -93,43 +93,33 @@ jobs:
           # Download CLI
           curl -sL -o asset.tar.gz "${{ inputs.download_url }}"
 
-          # Rename old CLI if it exists
-          mv ./skeleton ./skeleton-old
+          # Remove old CLI binary
+          rm -f ./skeleton
 
           # Extract file
           tar -xf asset.tar.gz
 
-          # Ensure new binary is executable (best-effort)
+          # Ensure binary is executable (best-effort)
           chmod +x ./skeleton || true
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: "8.4"
 
-      - name: Get CLI versions
+      - name: Get CLI version
         id: cli-versions
         shell: bash
         run: |
-          old_version="$( ./skeleton-old -V )"
           new_version="$( ./skeleton -V )"
-          
-          # Remove "old" CLI
-          rm -f ./skeleton-old
 
-          echo "old-version=$old_version" >> $GITHUB_OUTPUT
           echo "new-version=$new_version" >> $GITHUB_OUTPUT
 
       - name: Create PR
         uses: peter-evans/create-pull-request@v7
         with:
-          title: 'Update CLI to `${{ steps.cli-versions.outputs.new-version }}`'
-          branch: 'chore/update-cli'
+          title: "Update CLI to `${{ steps.cli-versions.outputs.new-version }}`"
+          branch: "chore/update-cli"
           sign-commits: true
           commit-message: |
-            Update CLI binary
-
-            From `${{ steps.cli-versions.outputs.old-version }}` to `${{ steps.cli-versions.outputs.new-version }}`
-
-
-
+            Update CLI binary to `${{ steps.cli-versions.outputs.new-version }}`
