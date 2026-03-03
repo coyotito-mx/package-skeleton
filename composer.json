@@ -3,7 +3,7 @@
     "description": "{{description}}",
     "license": "{{license|acronym}}",
     "require": {
-        "php": "^8.1"
+        "php": "^8.4"
     },
     "require-dev": {
         "laravel/pint": "^v1.25.1",
